@@ -736,7 +736,7 @@ jobs:
             if (!($environmentName)) {
               $environmentName = '${{ steps.envName.outputs.envName }}'
             }
-            $deployToSettings | Add-Member -name 'environmentName' -value $environmentName
+            $deployToSettings | Add-Member -MemberType NoteProperty -name 'environmentName' -value $environmentName
           }
           $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
           if (("$deployToSettings" -ne "") -and $deployToSettings.PSObject.Properties.name -eq "projects") {
@@ -750,7 +750,7 @@ jobs:
                 $projects = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String([System.Environment]::GetEnvironmentVariable('projects')))
               }
             }
-            $deployToSettings | Add-Member -Name 'projects' -Value $projects
+            $deployToSettings | Add-Member -MemberType NoteProperty -Name 'projects' -Value $projects
           }
           $powerPlatformSolutionFolder = [System.Environment]::GetEnvironmentVariable('PowerPlatformSolutionFolder')
           $deployPP = $false
