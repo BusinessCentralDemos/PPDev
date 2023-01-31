@@ -750,7 +750,7 @@ jobs:
                 $projects = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String([System.Environment]::GetEnvironmentVariable('projects')))
               }
             }
-            $deploySettings | Add-Member -Name 'projects' -Value $projects
+            $deployToSettings | Add-Member -Name 'projects' -Value $projects
           }
           $powerPlatformSolutionFolder = [System.Environment]::GetEnvironmentVariable('PowerPlatformSolutionFolder')
           $deployPP = $false
