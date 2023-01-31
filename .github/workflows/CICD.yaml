@@ -720,7 +720,7 @@ jobs:
             exit 1
           }
           if (("$deployToSetting" -ne "") -and $deployToSetting.PSObject.Properties.name -eq "EnvironmentName") {
-            $environmentName = $deployToSetting.EnvironmentName
+            $environmentName = $deployToSetting.environmentName
           }
           else {
             $environmentName = $null
@@ -733,12 +733,12 @@ jobs:
                 }
               }            
             }
+            if (!($environmentName)) {
+              $environmentName = '${{ steps.envName.outputs.envName }}'
+            }
+            $deployToSettings | Add-Member -name 'environmentName' -value $environmentName
           }
-          if (!($environmentName)) {
-            $environmentName = '${{ steps.envName.outputs.envName }}'
-          }
-          $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
-
+          $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($deployToSettings.environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
           if (("$deployToSetting" -ne "") -and $deployToSetting.PSObject.Properties.name -eq "projects") {
             $projects = $deployToSetting.projects
           }
@@ -750,9 +750,10 @@ jobs:
                 $projects = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String([System.Environment]::GetEnvironmentVariable('projects')))
               }
             }
+            $deploySettings | Add-Member -Name 'projects' -Value $projects
           }
           $powerPlatformSolutionFolder = [System.Environment]::GetEnvironmentVariable('PowerPlatformSolutionFolder')
-          $deplyPP = $false
+          $deployPP = $false
           if ($projects -eq '' -or $projects -eq '*') {
             $projects = '*'
             $deployPP = ("$powerPlatformSolutionFolder" -ne "")
@@ -771,6 +772,7 @@ jobs:
 
           Add-Content -Path $env:GITHUB_OUTPUT -Value "authContext=$authContext"
           Write-Host "authContext=$authContext"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "deployTo=$($deployToSettings | ConvertTo-Json -depth 99 -compress)"
           Add-Content -Path $env:GITHUB_OUTPUT -Value "environmentName=$environmentName"
           Write-Host "environmentName=$([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($environmentName)))"
           Write-Host "environmentName (as Base64)=$environmentName"
@@ -793,8 +795,12 @@ jobs:
 
       - name: Deploy PowerPlatform
         if: ${{ steps.authContext.outputs.deployPP == 'true' }}
+        env:
+          deployTo: ${{ steps.authContext.outputs.deployTo }}
         run: |
           Write-Host "Deploy PP solution from .artifacts"
+          $deployTo = $env:deployTo | ConvertFrom-Json
+          $deployTo | Out-Host
           Get-ChildItem -path '.artifacts' -recurse | Out-Host
 
   Deliver:

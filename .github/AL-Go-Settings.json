@@ -4,6 +4,7 @@
   "powerPlatformSolutionFolder": "PPSolution",
   "environments": [ "QA", "PROD (Production)" ],
   "DeployToQA": {
-    "environmentName": "BCQA"
+    "environmentName": "BCQA",
+    "environment-url": "https://www.google.com"
   }
 }
