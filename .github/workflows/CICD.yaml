@@ -495,7 +495,7 @@ jobs:
           SecretsJson: ${{ env.RepoSecrets }}
 
       - name: Alt. Build PowerPlatform Solution
-        id: BuildPowerPlatform
+        id: AltBuildPowerPlatform
         if: matrix.project == env.powerPlatformSolutionFolder && matrix.buildMode == 'default'
         run: |
           Write-Host "Build PowerPlatform Solution ${{ matrix.project }}"
