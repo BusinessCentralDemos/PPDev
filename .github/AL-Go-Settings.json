@@ -1,5 +1,9 @@
 {
   "type": "PTE",
   "templateUrl": "https://github.com/businesscentraldemos/AL-Go-PTE@PowerPlatform",
-  "powerPlatformSolutionFolder": "PPSolution"
+  "powerPlatformSolutionFolder": "PPSolution",
+  "environments": [ "QA", "PROD (Production)" ],
+  "DeployToQA": {
+    "environmentName": "BCQA"
+  }
 }
