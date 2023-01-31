@@ -491,9 +491,19 @@ jobs:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           Project: ${{ matrix.project }}
-          ProjectDependenciesJson: ${{ needs.Initialization.outputs.projectDependenciesJson }}
           settingsJson: ${{ env.Settings }}
           SecretsJson: ${{ env.RepoSecrets }}
+
+      - name: Alt. Build PowerPlatform Solution
+        id: BuildPowerPlatform
+        if: matrix.project == env.powerPlatformSolutionFolder && matrix.buildMode == 'default'
+        run: |
+          Write-Host "Build PowerPlatform Solution ${{ matrix.project }}"
+          Set-Location (Join-Path $ENV:GITHUB_WORKSPACE '${{ matrix.project }}')
+          if (!(Test-Path '.buildartifacts/PowerPlatformSolution')) {
+            New-Item -Path '.buildartifacts/PowerPlatformSolution' -ItemType Directory | Out-Null
+          }
+          Set-Content -Path (Join-Path '.buildartifacts/PowerPlatformSolution' 'Alt. myPPSolution.txt') -value 'This is my PP Solution .zip file'
 
       - name: Calculate Artifact names
         id: calculateArtifactNames
