@@ -738,7 +738,7 @@ jobs:
             }
             $deployToSettings | Add-Member -name 'environmentName' -value $environmentName
           }
-          $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($deployToSettings.environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
+          $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
           if (("$deployToSetting" -ne "") -and $deployToSetting.PSObject.Properties.name -eq "projects") {
             $projects = $deployToSetting.projects
           }
