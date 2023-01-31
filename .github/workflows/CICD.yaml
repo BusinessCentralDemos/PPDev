@@ -795,7 +795,7 @@ jobs:
         if: ${{ steps.authContext.outputs.deployPP == 'true' }}
         run: |
           Write-Host "Deploy PP solution from .artifacts"
-          Get-ChildItem -path '.artifacts' | Out-Host
+          Get-ChildItem -path '.artifacts' -recurse | Out-Host
 
   Deliver:
     needs: [ Initialization, Build ]
