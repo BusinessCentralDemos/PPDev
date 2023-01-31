@@ -485,12 +485,15 @@ jobs:
 
       - name: Build PowerPlatform Solution
         id: BuildPowerPlatform
-        if: matrix.project == env.powerPlatformSolutionFolder
-        run: |
-          Write-Host "Build PowerPlatform Solution ${{ matrix.project }}"
-          Set-Location (Join-Path $ENV:GITHUB_WORKSPACE '${{ matrix.project }}')
-          New-Item -Path '.buildartifacts/PowerPlatformSolution' -ItemType Directory | Out-Null
-          Set-Content -Path (Join-Path '.buildartifacts/PowerPlatformSolution' 'myPPSolution.txt') -value 'This is my PP Solution .zip file'
+        if: matrix.project == env.powerPlatformSolutionFolder && matrix.buildMode == 'default'
+        uses: BusinessCentralDemos/AL-Go-Actions/BuildPowerPlatform@PowerPlatform
+        with:
+          shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
+          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
+          Project: ${{ matrix.project }}
+          ProjectDependenciesJson: ${{ needs.Initialization.outputs.projectDependenciesJson }}
+          settingsJson: ${{ env.Settings }}
+          SecretsJson: ${{ env.RepoSecrets }}
 
       - name: Calculate Artifact names
         id: calculateArtifactNames
