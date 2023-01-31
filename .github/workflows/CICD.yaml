@@ -468,7 +468,7 @@ jobs:
           settingsJson: ${{ env.Settings }}
           secrets: 'licenseFileUrl,insiderSasToken,codeSignCertificateUrl,codeSignCertificatePassword,keyVaultCertificateUrl,keyVaultCertificatePassword,keyVaultClientId,storageContext,gitHubPackagesContext'
 
-      - name: Run pipeline
+      - name: Build AL Project
         id: RunPipeline
         if: matrix.project != env.powerPlatformSolutionFolder
         uses: BusinessCentralDemos/AL-Go-Actions/RunPipeline@PowerPlatform
@@ -488,6 +488,9 @@ jobs:
         if: matrix.project == env.powerPlatformSolutionFolder
         run: |
           Write-Host "Build PowerPlatform Solution ${{ matrix.project }}"
+          Set-Location (Join-Path $ENV:GITHUB_WORKSPACE '${{ matrix.project }}')
+          New-Item -Path '.buildartifacts/PowerPlatformSolution' -ItemType Directory | Out-Null
+          Set-Content -Path (Join-Path '.buildartifacts/PowerPlatformSolution' 'myPPSolution.txt') -value 'This is my PP Solution .zip file'
 
       - name: Calculate Artifact names
         id: calculateArtifactNames
@@ -508,7 +511,7 @@ jobs:
           }
           if ($project -eq ".") { $project = $settings.repoName }
           if ($buildMode -eq 'Default') { $buildMode = '' }
-          'Apps','Dependencies','TestApps','TestResults','BcptTestResults','BuildOutput','ContainerEventLog' | ForEach-Object {
+          'Apps','Dependencies','TestApps','TestResults','BcptTestResults','BuildOutput','ContainerEventLog','PowerPlatformSolution' | ForEach-Object {
             $name = "$($_)ArtifactsName"
             $value = "$($project.Replace('\','_').Replace('/','_'))-$($ref)-$buildMode$_-$($settings.repoVersion).$($settings.appBuild).$($settings.appRevision)"
             Add-Content -Path $env:GITHUB_OUTPUT -Value "$name=$value"
@@ -589,6 +592,14 @@ jobs:
         with:
           name: ${{ env.BcptTestResultsArtifactsName }}
           path: '${{ matrix.project }}/bcptTestResults.json'
+          if-no-files-found: ignore
+
+      - name: Publish artifacts - Power Platform Solution
+        uses: actions/upload-artifact@v3
+        if: github.ref_name == 'main' || startswith(github.ref_name, 'release/') || needs.Initialization.outputs.deliveryTargetCount > 0 || needs.Initialization.outputs.environmentCount > 0
+        with:
+          name: ${{ env.PowerPlatformSolutionArtifactsName }}
+          path: '${{ matrix.project }}/.buildartifacts/PowerPlatformSolution/'
           if-no-files-found: ignore
 
       - name: Analyze Test Results
