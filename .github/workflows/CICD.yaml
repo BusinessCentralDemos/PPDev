@@ -470,6 +470,7 @@ jobs:
 
       - name: Run pipeline
         id: RunPipeline
+        if: matrix.project != env.powerPlatformSolutionFolder
         uses: BusinessCentralDemos/AL-Go-Actions/RunPipeline@PowerPlatform
         env:
           BuildMode: ${{ matrix.buildMode }}
@@ -481,6 +482,12 @@ jobs:
           settingsJson: ${{ env.Settings }}
           SecretsJson: ${{ env.RepoSecrets }}
           buildMode: ${{ matrix.buildMode }}
+
+      - name: Build PowerPlatform Solution
+        id: BuildPowerPlatform
+        if: matrix.project == env.powerPlatformSolutionFolder
+        run: |
+          Write-Host "Build PowerPlatform Solution ${{ matrix.project }}"
 
       - name: Calculate Artifact names
         id: calculateArtifactNames
