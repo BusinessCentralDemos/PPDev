@@ -701,10 +701,10 @@ jobs:
           $envName = '${{ steps.envName.outputs.envName }}'
           $deployToSettingStr = [System.Environment]::GetEnvironmentVariable("DeployTo$envName")
           if ($deployToSettingStr) {
-            $deployToSetting = $deployToSettingStr | ConvertFrom-Json
+            $deployToSettings = $deployToSettingStr | ConvertFrom-Json
           }
           else {
-            $deployToSetting = [PSCustomObject]@{}
+            $deployToSettings = [PSCustomObject]@{}
           }
           $authContext = $null
           "$($envName)-AuthContext", "$($envName)_AuthContext", "AuthContext" | ForEach-Object {
@@ -719,8 +719,8 @@ jobs:
             Write-Host "::Error::No AuthContext provided"
             exit 1
           }
-          if (("$deployToSetting" -ne "") -and $deployToSetting.PSObject.Properties.name -eq "EnvironmentName") {
-            $environmentName = $deployToSetting.environmentName
+          if (("$deployToSettings" -ne "") -and $deployToSettings.PSObject.Properties.name -eq "EnvironmentName") {
+            $environmentName = $deployToSettings.environmentName
           }
           else {
             $environmentName = $null
@@ -739,8 +739,8 @@ jobs:
             $deployToSettings | Add-Member -name 'environmentName' -value $environmentName
           }
           $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
-          if (("$deployToSetting" -ne "") -and $deployToSetting.PSObject.Properties.name -eq "projects") {
-            $projects = $deployToSetting.projects
+          if (("$deployToSettings" -ne "") -and $deployToSettings.PSObject.Properties.name -eq "projects") {
+            $projects = $deployToSettings.projects
           }
           else {
             $projects = [System.Environment]::GetEnvironmentVariable("$($envName)-projects")
