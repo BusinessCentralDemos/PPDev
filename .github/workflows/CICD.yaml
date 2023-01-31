@@ -751,12 +751,22 @@ jobs:
               }
             }
           }
+          $powerPlatformSolutionFolder = [System.Environment]::GetEnvironmentVariable('PowerPlatformSolutionFolder')
+          $deplyPP = $false
           if ($projects -eq '' -or $projects -eq '*') {
             $projects = '*'
+            $deployPP = ("$powerPlatformSolutionFolder" -ne "")
           }
           else {
             $buildProjects = '${{ needs.Initialization.outputs.projects }}' | ConvertFrom-Json
-            $projects = ($projects.Split(',') | Where-Object { $buildProjects -contains $_ }) -join ','
+            $projects = ($projects.Split(',') | Where-Object { 
+              $deployALProject = $buildProjects -contains $_
+              if ($_ -eq $powerPlatformSolutionFolder) {
+                $deployPP = $true
+                $deployALProject = $false
+              }
+              $deployALProject
+            }) -join ','
           }
 
           Add-Content -Path $env:GITHUB_OUTPUT -Value "authContext=$authContext"
@@ -766,9 +776,12 @@ jobs:
           Write-Host "environmentName (as Base64)=$environmentName"
           Add-Content -Path $env:GITHUB_OUTPUT -Value "projects=$projects"
           Write-Host "projects=$projects"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
+          Write-Host "deployPP=$deployPP"
 
-      - name: Deploy
+      - name: Deploy AL
         uses: BusinessCentralDemos/AL-Go-Actions/Deploy@PowerPlatform
+        if: ${{ steps.authContext.outputs.projects }}
         env:
           AuthContext: ${{ steps.authContext.outputs.authContext }}
         with:
@@ -777,6 +790,12 @@ jobs:
           projects: ${{ steps.authContext.outputs.projects }}
           environmentName: ${{ steps.authContext.outputs.environmentName }}
           artifacts: '.artifacts'
+
+      - name: Deploy PowerPlatform
+        if: ${{ steps.authContext.outputs.deployPP == 'true' }}
+        run: |
+          Write-Host "Deploy PP solution from .artifacts"
+          Get-ChildItem -path '.artifacts' | Out-Host
 
   Deliver:
     needs: [ Initialization, Build ]
