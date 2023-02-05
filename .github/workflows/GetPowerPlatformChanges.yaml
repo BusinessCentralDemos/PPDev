@@ -1,0 +1,69 @@
+name: 'Create a new app'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: The Power Platform environemt to use
+        required: true
+        default: 'sandbox'
+      solution:
+        description: "The name of the Power Platform solution"
+        required: true
+      directCommit:
+        description: Direct COMMIT (Y/N)
+        required: false
+        default: "N"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: powershell
+
+env:
+  ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
+  ALGoRepoSettings: ${{ vars.ALGoRepoSettings }}
+
+jobs:
+  GetPowerPlatformChanges:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Read settings
+        uses: BusinessCentralDemos/AL-Go-Actions/ReadSettings@PowerPlatform
+        with:
+          shell: powershell
+          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
+          get: type
+
+      - name: Read secrets
+        uses: BusinessCentralDemos/AL-Go-Actions/ReadSecrets@PowerPlatform
+        env:
+          secrets: ${{ toJson(secrets) }}
+        with:
+          shell: powershell
+          settingsJson: ${{ env.Settings }}
+          secrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects'
+
+      - name: GetPowerPlatformChanges
+        uses: BusinessCentralDemos/AL-Go-Actions/GetPowerPlatformChanges@PowerPlatform
+        with:
+          shell: pwsh
+          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
+          environment: ${{ github.event.inputs.environment }}
+          solution: ${{ github.event.inputs.solution }}
+          settingsJson: ${{ steps.init.outputs.settingsJson }}
+          secretJson: ${{ steps.init.outputs.secretJson }}
+
+      - name: Finalize the workflow
+        if: always()
+        uses: BusinessCentralDemos/AL-Go-Actions/WorkflowPostProcess@PowerPlatform
+        with:
+          shell: powershell
+          eventId: "DO0092"
+          telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
