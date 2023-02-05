@@ -307,7 +307,7 @@ jobs:
       - name: Read settings
         uses: BusinessCentralDemos/AL-Go-Actions/ReadSettings@PowerPlatform
         with:
-          shell: powershell
+          shell: pwsh
 
       - name: Read secrets
         uses: BusinessCentralDemos/AL-Go-Actions/ReadSecrets@PowerPlatform
