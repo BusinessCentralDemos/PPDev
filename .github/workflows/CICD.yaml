@@ -796,12 +796,14 @@ jobs:
         if: ${{ steps.authContext.outputs.deployPP == 'true' }}
         env:
           deployTo: ${{ steps.authContext.outputs.deployTo }}
-        run: |
-          Write-Host "Deploy PP solution from .artifacts"
-          $deployTo = $env:deployTo | ConvertFrom-Json
-          $deployTo | Out-Host
-          Get-ChildItem -path '.artifacts' -recurse | Out-Host
-
+        uses: BusinessCentralDemos/AL-Go-Actions/DeployPowerPlatform@PowerPlatform
+        with:
+          shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
+          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
+          solution: ${{ matrix.project }}
+          version: 1.0.0.2
+            
+        
   Deliver:
     needs: [ Initialization, Build ]
     if: always() && needs.Build.result == 'Success' && github.event_name != 'workflow_run' && needs.Initialization.outputs.deliveryTargetCount > 0
