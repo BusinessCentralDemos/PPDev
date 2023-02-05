@@ -1,4 +1,4 @@
-name: 'Create a new app'
+name: 'Get Power Platform Changes'
 
 on:
   workflow_dispatch:
