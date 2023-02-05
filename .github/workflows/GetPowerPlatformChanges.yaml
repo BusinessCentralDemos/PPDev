@@ -6,11 +6,11 @@ on:
       solutionName: 
         description: 'Solution Name'
         required: true
-        default: 'Solution'
+        default: 'PPSolution'
       environment: 
         description: 'Environment'
         required: true
-        default: 'Dev'
+        default: 'QA'
 
 permissions:
   contents: read
