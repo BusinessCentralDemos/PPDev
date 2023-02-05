@@ -2,8 +2,15 @@ name: ' Get Power Platform changes'
 
 on:
   workflow_dispatch:
-
-run-name: ${{ github.event_name != 'workflow_run' && 'CI/CD' || format('Check pull request from {1}/{2}{0} {3}',':',github.event.workflow_run.head_repository.owner.login,github.event.workflow_run.head_branch,github.event.workflow_run.display_title) }}
+    inputs:
+      solutionName: 
+        description: 'Solution Name'
+        required: true
+        default: 'Solution'
+      environment: 
+        description: 'Environment'
+        required: true
+        default: 'Dev'
 
 permissions:
   contents: read
@@ -275,8 +282,7 @@ jobs:
   PullChanges:
     needs: [ Initialization ]
     if: needs.Initialization.outputs.environmentCount > 0
-    strategy: ${{ fromJson(needs.Initialization.outputs.environments) }}
-    runs-on: ${{ fromJson(matrix.os) }}
+    runs-on: ubuntu-latest
     name: Deploy to ${{ matrix.environment }}
     environment:
       name: ${{ matrix.environment }}
@@ -399,10 +405,7 @@ jobs:
           Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
           Write-Host "deployPP=$deployPP"
 
-      - name: Deploy PowerPlatform
-        if: ${{ steps.authContext.outputs.deployPP == 'true' }}
-        env:
-          deployTo: ${{ steps.authContext.outputs.deployTo }}
+      - name: Pull changes from PowerPlatform
         run: |
           Write-Host "Deploy PP solution from .artifacts"
           $deployTo = $env:deployTo | ConvertFrom-Json
