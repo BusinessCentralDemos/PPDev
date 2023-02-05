@@ -490,9 +490,10 @@ jobs:
         with:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
-          Project: ${{ matrix.project }}
+          project: ${{ matrix.project }}
           settingsJson: ${{ env.Settings }}
-          SecretsJson: ${{ env.RepoSecrets }}
+          secretsJson: ${{ env.RepoSecrets }}
+          deployToJson: ${{env.deployToJson}}
 
       - name: Alt. Build PowerPlatform Solution
         id: AltBuildPowerPlatform
