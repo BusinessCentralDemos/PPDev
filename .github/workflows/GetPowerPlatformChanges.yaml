@@ -314,12 +314,13 @@ jobs:
         env:
           secrets: ${{ toJson(secrets) }}
         with:
-          shell: powershell
+          shell: pwsh
           settingsJson: ${{ env.Settings }}
           secrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects'
 
       - name: AuthContext
         id: authContext
+        shell: pwsh
         run: |
           $ErrorActionPreference = "STOP"
           Set-StrictMode -version 2.0
@@ -407,6 +408,7 @@ jobs:
           Write-Host "deployPP=$deployPP"
 
       - name: Pull changes from PowerPlatform
+        shell: pwsh
         run: |
           Write-Host "Deploy PP solution from .artifacts"
           $deployTo = $env:deployTo | ConvertFrom-Json
