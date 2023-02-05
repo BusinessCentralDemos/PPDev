@@ -34,9 +34,8 @@ jobs:
       - name: Read settings
         uses: BusinessCentralDemos/AL-Go-Actions/ReadSettings@PowerPlatform
         with:
-          shell: powershell
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
-          get: type
+          shell: pwsh
+          project: ${{ inputs.environment }}
 
       - name: Read secrets
         uses: BusinessCentralDemos/AL-Go-Actions/ReadSecrets@PowerPlatform
