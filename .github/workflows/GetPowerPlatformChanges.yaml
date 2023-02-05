@@ -297,6 +297,7 @@ jobs:
 
       - name: EnvName
         id: envName
+        shell: pwsh
         run: |
           $ErrorActionPreference = "STOP"
           Set-StrictMode -version 2.0
