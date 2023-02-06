@@ -491,7 +491,7 @@ jobs:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           solution: ${{ matrix.project }}
-          outputFolder: .buildartifacts/PowerPlatformSolution
+          outputFolder: ${{ matrix.project }}/.buildartifacts/PowerPlatformSolution/
           version: 1.0.0.2
 
       - name: Calculate Artifact names
