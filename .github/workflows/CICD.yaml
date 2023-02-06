@@ -794,14 +794,15 @@ jobs:
 
       - name: Deploy PowerPlatform
         if: ${{ steps.authContext.outputs.deployPP == 'true' }}
-        env:
-          deployTo: ${{ steps.authContext.outputs.deployTo }}
         uses: BusinessCentralDemos/AL-Go-Actions/DeployPowerPlatform@PowerPlatform
         with:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           solution: ${{ matrix.project }}
           version: 1.0.0.2
+          artifact: '.artifacts/PowerPlatformSolution'
+          deploySettings: ${{ steps.authContext.outputs.deployTo }} 
+          authSettings: ${{ steps.authContext.outputs.authContext }}
             
         
   Deliver:
