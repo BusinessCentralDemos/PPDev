@@ -799,7 +799,7 @@ jobs:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           version: 1.0.0.2
-          artifact: '.artifacts/PowerPlatformSolution'
+          artifact: '.artifacts'
           deploySettings: ${{ steps.authContext.outputs.deployTo }} 
           authSettings: ${{ steps.authContext.outputs.authContext }}
             
