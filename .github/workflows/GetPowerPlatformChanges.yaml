@@ -393,7 +393,7 @@ jobs:
 
           Add-Content -Path $env:GITHUB_OUTPUT -Value "authContext=$authContext"
           Write-Host "authContext=$authContext"
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "deployTo=$($deployToSettings | ConvertTo-Json -depth 99 -compress)"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "deployToSettings=$($deployToSettings | ConvertTo-Json -depth 99 -compress)"
           Write-Host "deployToSettings=$deployToSettings"
           Add-Content -Path $env:GITHUB_OUTPUT -Value "environmentName=$environmentName"
           Write-Host "environmentName=$([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($environmentName)))"
@@ -406,7 +406,7 @@ jobs:
       - name: test input
         shell: powershell
         run: |
-          Write-Host "Deploy settings: ${{ env.deployTo }}";
+          Write-Host "Deploy settings: ${{ env.deployToSettings }}";
           Write-Host "Auth settings: ${{ env.authContext }}";
 
       - name: Parse deployTo JSON
