@@ -426,3 +426,22 @@ jobs:
           write-output $obj.bcCompanyId
           $bcCompanyId = $obj.bcCompanyId;
           echo "bcCompanyId=$bcCompanyId" >> $env:GITHUB_ENV
+
+      - name: Parse auth context
+        shell: powershell
+        run: |
+          $json = '${{ steps.AuthContext.outputs.authContext }}'
+          $obj = ConvertFrom-Json $json
+          $userName = $obj.userName;
+          Write-Output "userName=$userName"
+          echo "userName=$userName" >> $env:GITHUB_ENV
+          $password = $obj.password;
+          Write-Output "password=$password"
+          echo "password=$password" >> $env:GITHUB_ENV
+    
+      - name: Who am I
+        uses: microsoft/powerplatform-actions/who-am-i@v0
+        with:
+          user-name: ${{env.userName}}
+          password-secret: ${{env.passeword}}
+          environment-url: ${{env.environmentUrl}}
