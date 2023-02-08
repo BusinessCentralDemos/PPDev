@@ -430,8 +430,8 @@ jobs:
       - name: Parse auth context
         shell: powershell
         run: |
-          $authContext = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${{ steps.AuthContext.outputs.authContext }}')
-          $obj = ConvertFrom-Json authContext
+          $authContext = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${{ steps.AuthContext.outputs.authContext }}'))
+          $obj = ConvertFrom-Json $authContext
           $userName = $obj.userName;
           Write-Output "userName=$userName"
           echo "userName=$userName" >> $env:GITHUB_ENV
