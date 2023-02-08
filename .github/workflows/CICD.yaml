@@ -491,7 +491,7 @@ jobs:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           solutionName: ${{ matrix.project }}
-          soultionPath: ${{ matrix.project }}
+          solutionPath: ${{ matrix.project }}
           outputFolder: ${{ matrix.project }}/.buildartifacts/PowerPlatformSolution/
           version: 1.0.0.2
 
