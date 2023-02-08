@@ -406,7 +406,7 @@ jobs:
       - name: test input
         shell: powershell
         run: |
-          Write-Host "Deploy settings: ${{  }}";
+          Write-Host "Deploy settings: ${{ env.deployTo }}";
           Write-Host "Auth settings: ${{ env.authContext }}";
 
       - name: Parse deployTo JSON
