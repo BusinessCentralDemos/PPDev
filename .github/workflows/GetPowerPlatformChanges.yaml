@@ -1,16 +1,16 @@
-name: ' Get Power Platform changes'
+name: " Get Power Platform changes"
 
 on:
   workflow_dispatch:
     inputs:
-      solutionName: 
-        description: 'Solution Name'
+      solutionName:
+        description: "Solution Name"
         required: true
-        default: 'PPSolution'
-      environment: 
-        description: 'Environment'
+        default: "PPSolution"
+      environment:
+        description: "Environment"
         required: true
-        default: 'QA'
+        default: "QA"
 
 permissions:
   contents: read
@@ -30,7 +30,7 @@ env:
 jobs:
   Initialization:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
-    runs-on: [ windows-latest ]
+    runs-on: [windows-latest]
     outputs:
       telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
       settings: ${{ steps.ReadSettings.outputs.SettingsJson }}
@@ -74,7 +74,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           lfs: true
-    
+
       - name: Download Pull Request Changes
         if: github.event_name == 'workflow_run'
         uses: actions/github-script@v6
@@ -156,8 +156,8 @@ jobs:
         with:
           shell: powershell
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
-          getProjects: 'Y'
-          getEnvironments: '*'
+          getProjects: "Y"
+          getEnvironments: "*"
 
       - name: Determine Delivery Target Secrets
         id: DetermineDeliveryTargetSecrets
@@ -280,9 +280,9 @@ jobs:
           }
 
   PullChanges:
-    needs: [ Initialization ]
+    needs: [Initialization]
     if: needs.Initialization.outputs.environmentCount > 0
-    runs-on: ubuntu-latest
+    runs-on: [windows-latest]
     name: Deploy to ${{ matrix.environment }}
     environment:
       name: ${{ matrix.environment }}
@@ -290,14 +290,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: '.artifacts'
-
       - name: EnvName
         id: envName
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = "STOP"
           Set-StrictMode -version 2.0
@@ -307,20 +302,20 @@ jobs:
       - name: Read settings
         uses: BusinessCentralDemos/AL-Go-Actions/ReadSettings@PowerPlatform
         with:
-          shell: pwsh
+          shell: powershell
 
       - name: Read secrets
         uses: BusinessCentralDemos/AL-Go-Actions/ReadSecrets@PowerPlatform
         env:
           secrets: ${{ toJson(secrets) }}
         with:
-          shell: pwsh
+          shell: powershell
           settingsJson: ${{ env.Settings }}
-          secrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects'
+          secrets: "${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects"
 
       - name: AuthContext
         id: authContext
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = "STOP"
           Set-StrictMode -version 2.0
@@ -407,10 +402,26 @@ jobs:
           Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
           Write-Host "deployPP=$deployPP"
 
-      - name: Pull changes from PowerPlatform
-        shell: pwsh
+      - name: test input
+        shell: ${{inputs.shell}}
         run: |
-          Write-Host "Deploy PP solution from .artifacts"
-          $deployTo = $env:deployTo | ConvertFrom-Json
-          $deployTo | Out-Host
-          Get-ChildItem -path '.artifacts' -recurse | Out-Host
+          Write-Host "Deploy settings: ${{ inputs.deploySettings }}";
+          Write-Host "Auth settings: ${{ inputs.authSettings }}";
+
+      - name: Parse deployTo JSON
+        shell: ${{inputs.shell}}
+        run: |
+          $json = '${{ inputs.deploySettings }}'
+          $obj = ConvertFrom-Json $json
+          Write-Output $obj.environmentName
+          $environmentName = $obj.environmentName;
+          echo "environmentName=$environmentName" >> $env:GITHUB_ENV
+          Write-Output $obj.'environment-url'
+          $environmentUrl = $obj.'environment-url';
+          echo "environmentUrl=$environmentUrl" >> $env:GITHUB_ENV
+          Write-Output $obj.bcEnvironment
+          $bcEnvironment = $obj.bcEnvironment;
+          echo "bcEnvironment=$bcEnvironment" >> $env:GITHUB_ENV
+          write-output $obj.bcCompanyId
+          $bcCompanyId = $obj.bcCompanyId;
+          echo "bcCompanyId=$bcCompanyId" >> $env:GITHUB_ENV
