@@ -283,9 +283,9 @@ jobs:
     needs: [Initialization]
     if: needs.Initialization.outputs.environmentCount > 0
     runs-on: [windows-latest]
-    name: Deploy to ${{ matrix.environment }}
+    name: Deploy to ${{ input.environment }}
     environment:
-      name: ${{ matrix.environment }}
+      name: ${{ input.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -359,7 +359,7 @@ jobs:
             }
             $deployToSettings | Add-Member -MemberType NoteProperty -name 'environmentName' -value $environmentName
           }
-          $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
+          $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ input.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
           if (("$deployToSettings" -ne "") -and $deployToSettings.PSObject.Properties.name -eq "projects") {
             $projects = $deployToSettings.projects
           }
