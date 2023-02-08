@@ -403,13 +403,13 @@ jobs:
           Write-Host "deployPP=$deployPP"
 
       - name: test input
-        shell: ${{inputs.shell}}
+        shell: powershell
         run: |
           Write-Host "Deploy settings: ${{ inputs.deploySettings }}";
           Write-Host "Auth settings: ${{ inputs.authSettings }}";
 
       - name: Parse deployTo JSON
-        shell: ${{inputs.shell}}
+        shell: powershell
         run: |
           $json = '${{ inputs.deploySettings }}'
           $obj = ConvertFrom-Json $json
