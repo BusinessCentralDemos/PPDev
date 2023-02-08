@@ -406,13 +406,13 @@ jobs:
       - name: test input
         shell: powershell
         run: |
-          Write-Host "Deploy settings: ${{ env.deployToSettings }}";
-          Write-Host "Auth settings: ${{ env.authContext }}";
+          Write-Host "Deploy settings: ${{ steps.AuthContext.outputs.deployToSettings }}";
+          Write-Host "Auth settings: ${{ steps.AuthContext.outputs.authContext }}";
 
       - name: Parse deployTo JSON
         shell: powershell
         run: |
-          $json = '${{ inputs.deploySettings }}'
+          $json = '${{ steps.AuthContext.outputs.deployToSettings }}'
           $obj = ConvertFrom-Json $json
           Write-Output $obj.environmentName
           $environmentName = $obj.environmentName;
