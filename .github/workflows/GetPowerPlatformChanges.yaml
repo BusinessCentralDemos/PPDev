@@ -28,18 +28,16 @@ jobs:
   PullChanges:
     runs-on: [windows-latest]
     name: Pull changes from ${{ inputs.environment }}
-    environment:
-      name: ${{ inputs.environment }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Initialize the workflow
         id: init
         uses: BusinessCentralDemos/AL-Go-Actions/WorkflowInitialize@PowerPlatform
         with:
           shell: powershell
           eventId: "DO0091"
-
-      - name: Checkout
-        uses: actions/checkout@v3
 
       - name: EnvName
         id: envName
