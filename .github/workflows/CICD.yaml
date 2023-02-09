@@ -490,10 +490,11 @@ jobs:
         with:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
-          solutionName: ${{ matrix.project }}
-          solutionPath: ${{ matrix.project }}
+          solutionFolder: ${{ matrix.project }}
           outputFolder: ${{ matrix.project }}/.buildartifacts/PowerPlatformSolution/
-          version: 1.0.0.2
+          outputFileName: ${{ matrix.project }}
+          appRevision: ${{ env.appRevision }}
+          appBuild: ${{ env.appBuild }}
 
       - name: Calculate Artifact names
         id: calculateArtifactNames
@@ -789,7 +790,6 @@ jobs:
         with:
           shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
-          version: 1.0.0.2
           artifact: '.artifacts'
           deploySettings: ${{ steps.authContext.outputs.deployTo }} 
           authSettings: ${{ steps.authContext.outputs.authContext }}
