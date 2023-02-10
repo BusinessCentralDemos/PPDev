@@ -152,12 +152,6 @@ jobs:
           Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
           Write-Host "deployPP=$deployPP"
 
-      - name: test input
-        shell: powershell
-        run: |
-          Write-Host "Deploy settings: ${{ steps.AuthContext.outputs.deployToSettings }}";
-          Write-Host "Auth settings: ${{ steps.AuthContext.outputs.authContext }}";
-
       - name: Parse deployTo JSON
         shell: powershell
         run: |
@@ -188,9 +182,12 @@ jobs:
           Write-Output "password=$password"
           echo "password=$password" >> $env:GITHUB_ENV
     
-      - name: Who am I
-        uses: microsoft/powerplatform-actions/who-am-i@v0
-        with:
-          user-name: ${{env.userName}}
-          password-secret: ${{env.password}}
-          environment-url: ${{env.environmentUrl}}
+      - name: Export changes from Power Platform 
+        uses: BusinessCentralDemos/AL-Go-Actions/GetPowerPlatformChanges@PowerPlatform
+        with: 
+          shell: powershell
+          solutionName: ${{ inputs.solutionName }}
+          password: ${{ env.password }}
+          userName: ${{ env.userName }}
+          environmentUrl: ${{ env.environmentUrl }}
+          directCommit: ${{ inputs.directCommit == 'Y' }}
