@@ -152,36 +152,6 @@ jobs:
           Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
           Write-Host "deployPP=$deployPP"
 
-      - name: Parse deployTo JSON
-        shell: powershell
-        run: |
-          $json = '${{ steps.AuthContext.outputs.deployToSettings }}'
-          $obj = ConvertFrom-Json $json
-          Write-Output $obj.environmentName
-          $environmentName = $obj.environmentName;
-          echo "environmentName=$environmentName" >> $env:GITHUB_ENV
-          Write-Output $obj.'environment-url'
-          $environmentUrl = $obj.'environment-url';
-          echo "environmentUrl=$environmentUrl" >> $env:GITHUB_ENV
-          Write-Output $obj.bcEnvironment
-          $bcEnvironment = $obj.bcEnvironment;
-          echo "bcEnvironment=$bcEnvironment" >> $env:GITHUB_ENV
-          write-output $obj.bcCompanyId
-          $bcCompanyId = $obj.bcCompanyId;
-          echo "bcCompanyId=$bcCompanyId" >> $env:GITHUB_ENV
-
-      - name: Parse auth context
-        shell: powershell
-        run: |
-          $authContext = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${{ steps.AuthContext.outputs.authContext }}'))
-          $obj = ConvertFrom-Json $authContext
-          $userName = $obj.userName;
-          Write-Output "userName=$userName"
-          echo "userName=$userName" >> $env:GITHUB_ENV
-          $password = $obj.password;
-          Write-Output "password=$password"
-          echo "password=$password" >> $env:GITHUB_ENV
-    
       - name: Export changes from Power Platform 
         uses: BusinessCentralDemos/AL-Go-Actions/GetPowerPlatformChanges@PowerPlatform
         with: 
