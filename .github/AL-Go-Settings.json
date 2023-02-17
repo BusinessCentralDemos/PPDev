@@ -4,9 +4,10 @@
   "powerPlatformSolutionFolder": "PPSolution",
   "environments": [ "QA", "PROD (Production)" ],
   "DeployToQA": {
-    "environmentName": "QABC",
+    "environmentName": "Business Central QA",
     "environment-url": "https://orgc791aad2.crm.dynamics.com/",
     "bcEnvironment": "Sandbox",
-    "bcCompanyId": "a2db7307-078b-ed11-aad8-000d3a21edc2"
+    "bcCompanyId": "a2db7307-078b-ed11-aad8-000d3a21edc2",
+    "tenant": "56c3f198-6753-4f7a-b8d7-9c599c3d96ef"    
   }
 }
