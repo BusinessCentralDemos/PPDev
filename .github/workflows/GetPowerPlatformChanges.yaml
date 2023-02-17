@@ -187,7 +187,6 @@ jobs:
         with: 
           shell: powershell
           solutionName: ${{ inputs.solutionName }}
-          password: ${{ env.password }}
-          userName: ${{ env.userName }}
-          environmentUrl: ${{ env.environmentUrl }}
+          deploySettings: ${{ steps.authContext.outputs.deployTo }} 
+          authSettings: ${{ steps.authContext.outputs.authContext }}
           directCommit: ${{ inputs.directCommit == 'Y' }}
