@@ -10,7 +10,7 @@ on:
       environment:
         description: "Environment"
         required: true
-        default: "QA"
+        default: "Staging"
       directCommit:
         description: Direct COMMIT (Y/N)
         required: false
