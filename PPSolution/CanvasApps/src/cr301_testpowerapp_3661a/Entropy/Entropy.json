@@ -3,19 +3,19 @@
   "ControlUniqueGuids": {},
   "ControlUniqueIds": {
     "App": 1,
+    "First Screen": 3,
     "Gallery1": 5,
     "galleryTemplate1": 6,
     "Image1": 7,
+    "Label1": 12,
     "NextArrow1": 9,
-    "Screen1": 3,
     "Separator1": 11,
     "Subtitle1": 10,
-    "TextInput1": 4,
     "Title1": 8
   },
   "FunctionParamsInvariantScripts": {},
   "FunctionParamsInvariantScriptsOnInstances": {},
-  "HeaderLastSavedDateTimeUTC": "02/05/2023 10:28:50",
+  "HeaderLastSavedDateTimeUTC": "02/18/2023 13:21:07",
   "IsLegacyComponentAllowGlobalScopeCase": false,
   "LocalConnectionIDReferences": {
     "2e6827f9-5abd-4e70-9209-d0de94fc4819": "\"/providers/microsoft.powerapps/apis/shared_dynamicssmbsaas/connections/07bafc04097847329ab395f2efbe849e\""
@@ -34,35 +34,34 @@
   "OrderTemplate": {},
   "OrderXMLTemplate": {
     "gallery": 1,
-    "icon": 4,
+    "icon": 3,
     "image": 2,
-    "label": 3,
-    "rectangle": 5,
-    "text": 0
+    "label": 0,
+    "rectangle": 4
   },
   "OverridablePropertiesEntry": {
     "App": {},
+    "First Screen": {},
     "Gallery1": {},
     "galleryTemplate1": {},
     "Image1": {},
+    "Label1": {},
     "NextArrow1": {},
-    "Screen1": {},
     "Separator1": {},
     "Subtitle1": {},
-    "TextInput1": {},
     "Title1": {}
   },
   "PCFDynamicSchemaForIRRetrievalEntry": {},
   "PublishOrderIndices": {
     "App": 0,
+    "First Screen": 0,
     "Gallery1": 1,
     "galleryTemplate1": 2,
     "Image1": 3,
+    "Label1": 0,
     "NextArrow1": 5,
-    "Screen1": 0,
     "Separator1": 7,
     "Subtitle1": 6,
-    "TextInput1": 0,
     "Title1": 4
   },
   "ResourcesJsonIndices": {
@@ -71,7 +70,7 @@
   "RuleScreenIdWithoutScreen": {},
   "TemplateVersions": {},
   "VolatileProperties": {
-    "AnalysisLoadTime": 0.090744500000000006,
+    "AnalysisLoadTime": 0.1003385,
     "ControlCount": {
       "gallery": 1,
       "galleryTemplate": 1,
@@ -82,7 +81,7 @@
       "screen": 1,
       "text": 1
     },
-    "DeserializationLoadTime": 2.5027058000000002,
+    "DeserializationLoadTime": 1.238102,
     "ErrorCount": 0
   },
   "WasLocalDatabaseReferencesEmpty": true
