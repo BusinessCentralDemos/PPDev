@@ -173,18 +173,6 @@ jobs:
                 Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
                 Write-Host "deployPP=$deployPP"
 
-      - name: Deploy AL
-        uses: BusinessCentralDemos/AL-Go-Actions/Deploy@PowerPlatform
-        env:
-          AuthContext: ${{ steps.authContext.outputs.authContext }}
-        with:
-          shell: powershell
-          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
-          type: 'Publish'
-          projects: ${{ steps.authContext.outputs.projects }}
-          environmentName: ${{ steps.authContext.outputs.environmentName }}
-          artifacts: ${{ github.event.inputs.appVersion }}
-
       - name: Deploy PowerPlatform
         if: ${{ steps.authContext.outputs.deployPP == 'true' }}
         uses: BusinessCentralDemos/AL-Go-Actions/DeployPowerPlatform@PowerPlatform
