@@ -1,4 +1,4 @@
-name: " Get Power Platform changes"
+name: " Pull Power Platform changes"
 
 on:
   workflow_dispatch:
@@ -153,7 +153,7 @@ jobs:
           Write-Host "deployPP=$deployPP"
 
       - name: Export changes from Power Platform 
-        uses: BusinessCentralDemos/AL-Go-Actions/GetPowerPlatformChanges@PowerPlatform
+        uses: BusinessCentralDemos/AL-Go-Actions/PullPowerPlatformChanges@PowerPlatform
         with: 
           shell: powershell
           solutionName: ${{ inputs.solutionName }}
