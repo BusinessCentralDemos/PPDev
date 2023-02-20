@@ -12,6 +12,15 @@
   <CustomControls />
   <EntityDataProviders />
   <CanvasApps />
+  <connectionreferences>
+    <connectionreference connectionreferencelogicalname="cr301_shareddynamicssmbsaas_b5155">
+      <connectionreferencedisplayname>Dynamics 365 Business Central PPSolution-b5155</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_dynamicssmbsaas</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+  </connectionreferences>
   <Languages>
     <Language>1033</Language>
   </Languages>
