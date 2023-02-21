@@ -67,7 +67,7 @@ jobs:
         with:
           shell: powershell
           envName: ${{ steps.envName.outputs.envName }}
-          environmentName: ${{ steps.authContext.outputs.environmentName }}
+          environment: ${{ steps.envName.outputs.envName }}
           projects: ${{ steps.authContext.outputs.projects }}
 
       - name: Export changes from Power Platform 
