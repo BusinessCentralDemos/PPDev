@@ -62,13 +62,12 @@ jobs:
           settingsJson: ${{ env.Settings }}
           secrets: "${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects"
       
-      - name: Read auth context
+      - name: authContext
         uses: BusinessCentralDemos/AL-Go-Actions/ReadAuthContext@PowerPlatform
         with:
           shell: powershell
           envName: ${{ steps.envName.outputs.envName }}
           environment: ${{ steps.envName.outputs.envName }}
-          projects: ${{ steps.authContext.outputs.projects }}
 
       - name: Export changes from Power Platform 
         uses: BusinessCentralDemos/AL-Go-Actions/PullPowerPlatformChanges@PowerPlatform
