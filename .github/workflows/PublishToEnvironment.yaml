@@ -172,6 +172,16 @@ jobs:
                 Write-Host "projects=$projects"
                 Add-Content -Path $env:GITHUB_OUTPUT -Value "deployPP=$deployPP"
                 Write-Host "deployPP=$deployPP"
+            
+      - name: Get Artifacts
+        uses: BusinessCentralDemos/AL-Go-Actions/GetArtifacts@PowerPlatform
+        with:
+          shell: powershell
+          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
+          type: 'Publish'
+          projects: ${{ steps.authContext.outputs.projects }}
+          environmentName: ${{ steps.authContext.outputs.environmentName }}
+          artifactVersion: ${{ github.event.inputs.appVersion }}
 
       - name: Deploy PowerPlatform
         if: ${{ steps.authContext.outputs.deployPP == 'true' }}
@@ -182,6 +192,18 @@ jobs:
           artifactPath: '.artifacts'
           deploySettings: ${{ steps.authContext.outputs.deployTo }} 
           authSettings: ${{ steps.authContext.outputs.authContext }}
+
+      - name: Deploy AL
+        uses: BusinessCentralDemos/AL-Go-Actions/Deploy@PowerPlatform
+        env:
+          AuthContext: ${{ steps.authContext.outputs.authContext }}
+        with:
+          shell: powershell
+          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
+          type: 'Publish'
+          projects: ${{ steps.authContext.outputs.projects }}
+          environmentName: ${{ steps.authContext.outputs.environmentName }}
+          artifacts: ${{ github.event.inputs.appVersion }}
 
   PostProcess:
     if: always()
