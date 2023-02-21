@@ -70,11 +70,18 @@ jobs:
           envName: ${{ steps.envName.outputs.envName }}
           environment: ${{ steps.envName.outputs.envName }}
 
+      - name: TEST
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "STOP"
+          Set-StrictMode -version 2.0
+          echo ${{ steps.authContext.outputs.authContext }} ${{ steps.authContext.outputs.deployTo }} ${{ steps.authContext.outputs }}
+
       - name: Export changes from Power Platform 
         uses: BusinessCentralDemos/AL-Go-Actions/PullPowerPlatformChanges@PowerPlatform
         with: 
           shell: powershell
           solutionName: ${{ inputs.solutionName }}
           directCommit: ${{ inputs.directCommit == 'Y' }}
-          deploySettings: ${{ steps.authContext.outputs.deployToSettings }} 
+          deploySettings: ${{ steps.authContext.outputs.deployTo }} 
           authSettings: ${{ steps.authContext.outputs.authContext }}
