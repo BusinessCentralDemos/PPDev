@@ -97,9 +97,6 @@ jobs:
         with:
           shell: powershell
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
-          type: 'Publish'
-          projects: ${{ env.projects }}
-          environmentName: ${{ env.environmentName }}
           artifactVersion: ${{ github.event.inputs.appVersion }}
 
       - name: Deploy PowerPlatform
