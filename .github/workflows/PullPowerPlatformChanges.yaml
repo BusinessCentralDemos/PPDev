@@ -70,13 +70,6 @@ jobs:
           envName: ${{ steps.envName.outputs.envName }}
           environment: ${{ steps.envName.outputs.envName }}
 
-      - name: TEST
-        shell: powershell
-        run: |
-          echo ${{ env.authContext }} 
-          echo ${{ env.deployTo }}
-          echo ${{ env.environmentName }}
-
       - name: Export changes from Power Platform 
         uses: BusinessCentralDemos/AL-Go-Actions/PullPowerPlatformChanges@PowerPlatform
         with: 
