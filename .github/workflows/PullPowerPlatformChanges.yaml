@@ -37,7 +37,7 @@ jobs:
         uses: BusinessCentralDemos/AL-Go-Actions/WorkflowInitialize@PowerPlatform
         with:
           shell: powershell
-          eventId: "DO0091"
+          eventId: "DO0103"
 
       - name: EnvName
         id: envName
@@ -78,3 +78,11 @@ jobs:
           directCommit: ${{ inputs.directCommit == 'Y' }}
           deploySettings: ${{ env.deployTo }} 
           authSettings: ${{ env.authContext }}
+
+      - name: Finalize the workflow
+        if: always()
+        uses: BusinessCentralDemos/AL-Go-Actions/WorkflowPostProcess@PowerPlatform
+        with:
+          shell: powershell
+          eventId: "DO0103"
+          telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
