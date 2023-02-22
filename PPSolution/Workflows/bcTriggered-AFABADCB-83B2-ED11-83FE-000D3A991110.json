@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_dynamicssmbsaas": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cr301_shareddynamicssmbsaas_b5155"
+        },
+        "api": {
+          "name": "shared_dynamicssmbsaas"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_record_is_changed_(V3)": {
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "b485c967-7646-4f7e-b899-a96da58d2e8e"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_dynamicssmbsaas",
+              "operationId": "CreateOnChangedItemsSubscriptionV3",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_dynamicssmbsaas"
+            },
+            "parameters": {
+              "bcenvironment": "SANDBOX",
+              "company": "a2db7307-078b-ed11-aad8-000d3a21edc2",
+              "dataset": "v2.0",
+              "table": "customers"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Find_records_(V3)": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "00b3d54e-0a72-4efe-92e9-4ae59061cc9b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_dynamicssmbsaas",
+              "operationId": "GetItemsV3",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_dynamicssmbsaas"
+            },
+            "parameters": {
+              "bcenvironment": "SANDBOX",
+              "company": "a2db7307-078b-ed11-aad8-000d3a21edc2",
+              "dataset": "v2.0",
+              "table": "customers"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
