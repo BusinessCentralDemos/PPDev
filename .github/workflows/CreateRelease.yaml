@@ -123,17 +123,13 @@ jobs:
             }
             $refname = "$ENV:GITHUB_REF_NAME".Replace('/','_')
             Write-Host "Analyzing artifacts for project $project"
-
-            write-host "Debugger help******************************************"
-            write-host "Looking for: $project-$refname-PowerPlatformSolution-*"
-            $allArtifacts | ForEach-Object { write-host $_ }
             $appVersion = '${{ env._appVersion }}'            
             if ($appVersion -eq "latest") {
               Write-Host "Grab latest"
               $artifact = $allArtifacts | Where-Object { $_.name -like "$project-$refname-Apps-*" -or $_.name -like "$project-$refname-PowerPlatformSolution-*" } | Select-Object -First 1
             }
             else {
-              Write-Host "Search for $project-$refname-Apps-$appVersion"
+              Write-Host "Search for $project-$refname-Apps-$appVersion or $project-$refname-PowerPlatformSolution-$appVersion"
               $artifact = $allArtifacts | Where-Object { $_.name -eq "$project-$refname-Apps-$appVersion" -or $_.name -eq "$project-$refname-PowerPlatformSolution-$appVersion" } | Select-Object -First 1
             }
 
@@ -159,13 +155,14 @@ jobs:
               $sha = $artifact.workflow_run.head_sha
             }
 
-            $allArtifacts | Where-Object { ($_.name -like "$project-$refname-Apps-$($artifactsVersion)" -or $_.name -like "$project-$refname-TestApps-$($artifactsVersion)" -or $_.name -like "$project-$refname-Dependencies-$($artifactsVersion)" -or $_.name -like "$project-$refname-PowerPlatformSolution-$($artifactsVersion)") } | ForEach-Object {
+            $allArtifacts | Where-Object { ($_.name -like "$project-$refname-Apps-$artifactsVersion" -or $_.name -like "$project-$refname-TestApps-$artifactsVersion" -or $_.name -like "$project-$refname-Dependencies-$artifactsVersion" -or $_.name -like "$project-$refname-PowerPlatformSolution-$artifactsVersion") } | ForEach-Object {
               $atype = $_.name.SubString(0,$_.name.Length-$artifactsVersion.Length-1)
               $atype = $atype.SubString($atype.LastIndexOf('-')+1)
               $include += $( [ordered]@{ "name" = $_.name; "url" = $_.archive_download_url; "atype" = $atype; "project" = $thisproject } )
             }
+
             if ($include.Count -eq 0) {
-              Write-Host "::Error::No artifacts found"
+              Write-Host "::Error::No artifacts found for version $artifactsVersion"
               exit 1
             }
           }
