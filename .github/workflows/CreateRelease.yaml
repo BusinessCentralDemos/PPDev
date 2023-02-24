@@ -126,16 +126,17 @@ jobs:
 
             write-host "Debugger help******************************************"
             write-host "Looking for: $project-$refname-PowerPlatformSolution-*"
-            write-host "Artifacts: $allArtifacts"
+            $allArtifacts | ForEach-Object { write-host $_ }
             $appVersion = '${{ env._appVersion }}'            
             if ($appVersion -eq "latest") {
               Write-Host "Grab latest"
-              $artifact = $allArtifacts | Where-Object { ($_.name -like "$project-$refname-Apps-*") -or $_.name -like "$project-$refname-PowerPlatformSolution-*" } | Select-Object -First 1
+              $artifact = $allArtifacts | Where-Object { $_.name -like "$project-$refname-Apps-*" -or $_.name -like "$project-$refname-PowerPlatformSolution-*" } | Select-Object -First 1
             }
             else {
               Write-Host "Search for $project-$refname-Apps-$appVersion"
               $artifact = $allArtifacts | Where-Object { $_.name -eq "$project-$refname-Apps-$appVersion" -or $_.name -eq "$project-$refname-PowerPlatformSolution-$appVersion" } | Select-Object -First 1
             }
+
             if ($artifact) {
               $startIndex = $artifact.name.LastIndexOf('-Apps-') + 6
               # If "-Apps-" was not found (lastIndex == -1), check for "-PowerPlatformSolution-" instead
