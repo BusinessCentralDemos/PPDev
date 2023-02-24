@@ -124,7 +124,9 @@ jobs:
             $refname = "$ENV:GITHUB_REF_NAME".Replace('/','_')
             Write-Host "Analyzing artifacts for project $project"
 
-            $allArtifacts | ForEach-Object { write-host $_.name};
+            write-host "Debugger help******************************************"
+            write-host "Looking for: $project-$refname-PowerPlatformSolution-*"
+            $allArtifacts | ForEach-Object { write-host $_.name}
             $appVersion = '${{ env._appVersion }}'            
             if ($appVersion -eq "latest") {
               Write-Host "Grab latest"
