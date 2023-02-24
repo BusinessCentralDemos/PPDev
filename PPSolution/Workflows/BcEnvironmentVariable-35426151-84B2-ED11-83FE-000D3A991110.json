@@ -68,8 +68,8 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_dynamicssmbsaas"
             },
             "parameters": {
-              "bcenvironment": "@parameters('BcEnvironmentForFLow (cr301_BcEnvironmentForFLow)')",
-              "company": "@parameters('BcCompanyidForFLow (cr301_BcCompanyForFLow)')",
+              "bcenvironment": "Sandbox",
+              "company": "a2db7307-078b-ed11-aad8-000d3a21edc2",
               "dataset": "v2.0",
               "table": "customers"
             },
