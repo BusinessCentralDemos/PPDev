@@ -134,11 +134,7 @@ jobs:
             }
 
             if ($artifact) {
-              $startIndex = $artifact.name.LastIndexOf('-Apps-') + 6
-              # If "-Apps-" was not found (lastIndex == -1), check for "-PowerPlatformSolution-" instead
-              if ($startIndex -eq 5) {
-                  $startIndex = $artifact.name.LastIndexOf('-PowerPlatformSolution-') + 24
-              }
+              $startIndex = $artifact.name.LastIndexOf('-') + 1
               $artifactsVersion = $artifact.name.SubString($startIndex)
             }
             else {
