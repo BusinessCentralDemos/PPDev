@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       solutionName:
-        description: "Name of the Power Platform solution. (Start takes the name from Al-go-settings.json)"
+        description: "Name of the Power Platform solution. (* takes the name from Al-go-settings.json)"
         required: true
         default: "*"
       environment:
