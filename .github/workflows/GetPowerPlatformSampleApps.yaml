@@ -1,0 +1,65 @@
+name: " Get Power Platform Sample Apps"
+
+on:
+  workflow_dispatch:
+    inputs:
+      solutionName:
+        description: "Name of the Power Platform solution. (* takes the name from Al-go-settings.json)"
+        required: true
+        default: "*"
+      environment:
+        description: "Environment"
+        required: true
+        default: "Staging"
+      directCommit:
+        description: Direct COMMIT (Y/N)
+        required: false
+        default: "N"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: powershell
+
+jobs:
+  PullChanges:
+    runs-on: [windows-latest]
+    name: Pull changes from ${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Initialize the workflow
+        id: init
+        uses: BusinessCentralDemos/AL-Go-Actions/WorkflowInitialize@PowerPlatform
+        with:
+          shell: powershell
+          eventId: "DO0103"
+
+      - name: read auth context
+        id: authContext
+        uses: BusinessCentralDemos/AL-Go-Actions/ReadAuthContext@PowerPlatform
+        with:
+          shell: powershell
+          envName: ${{ steps.envName.outputs.envName }}
+          environment: ${{ steps.envName.outputs.envName }}
+
+      - name: Get the sample apps 
+        uses: BusinessCentralDemos/AL-Go-Actions/GetPPTestArtifacts@PowerPlatform
+        with: 
+          shell: powershell
+          solutionName: ${{ env.powerPlatformSolutionFolder }}
+          directCommit: ${{ inputs.directCommit == 'Y' }}
+          deploySettings: ${{ env.deployTo }} 
+          authSettings: ${{ env.authContext }}
+
+      - name: Finalize the workflow
+        if: always()
+        uses: BusinessCentralDemos/AL-Go-Actions/WorkflowPostProcess@PowerPlatform
+        with:
+          shell: powershell
+          eventId: "DO0103"
+          telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
