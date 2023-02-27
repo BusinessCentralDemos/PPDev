@@ -1,4 +1,4 @@
-name: " Get Power Platform Sample Apps"
+name: " Get Power Platform Sample Apps (Preview)"
 
 on:
   workflow_dispatch:
@@ -35,6 +35,15 @@ jobs:
         uses: BusinessCentralDemos/AL-Go-Actions/GetPPTestArtifacts@PowerPlatform
         with: 
           shell: powershell
+
+      - name: unpack-solution action 
+        uses: microsoft/powerplatform-actions/unpack-solution@v0
+        with:
+          solution-file: ${{ env.bcSampleAppFilePath }}
+          solution-folder: ${{ env.bcSampleAppFile }}
+          solution-type: "Unmanaged"
+          overwrite-files: false
+          process-canvas-apps: true
 
       - name: Finalize the workflow
         if: always()
