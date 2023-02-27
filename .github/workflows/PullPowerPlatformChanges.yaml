@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       solutionName:
-        description: "Solution Name"
+        description: "Name of the Power Platform solution. (Start takes the name from Al-go-settings.json)"
         required: true
-        default: "PPSolution"
+        default: "*"
       environment:
         description: "Environment"
         required: true
@@ -69,6 +69,20 @@ jobs:
           shell: powershell
           envName: ${{ steps.envName.outputs.envName }}
           environment: ${{ steps.envName.outputs.envName }}
+
+      - name: Set Power Platform solution name
+        id: solutionName
+        shell: powershell
+        env: 
+          _inputSolutionName: ${{ inputs.solutionName }}
+        run: |
+          $ErrorActionPreference = "STOP"
+          Set-StrictMode -version 2.0
+          $solutionName = $env:_inputSolutionName
+          if ($solutionName -eq "*") {
+            $solutionName = $env:powerPlatformSolutionFolder
+          }
+          Add-Content -Path $env:GITHUB_ENV -Value "powerPlatformSolutionFolder=$solutionName"   
 
       - name: Export changes from Power Platform 
         uses: BusinessCentralDemos/AL-Go-Actions/PullPowerPlatformChanges@PowerPlatform
