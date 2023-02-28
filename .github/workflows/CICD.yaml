@@ -468,7 +468,7 @@ jobs:
           settingsJson: ${{ env.Settings }}
           secrets: 'licenseFileUrl,insiderSasToken,codeSignCertificateUrl,codeSignCertificatePassword,keyVaultCertificateUrl,keyVaultCertificatePassword,keyVaultClientId,storageContext,gitHubPackagesContext'
 
-      - name: Build AL Project
+      - name: Build AL Solution
         id: RunPipeline
         if: matrix.project != env.powerPlatformSolutionFolder
         uses: BusinessCentralDemos/AL-Go-Actions/RunPipeline@PowerPlatform
@@ -711,7 +711,7 @@ jobs:
             exit 1
           }
           if (("$deployToSettings" -ne "") -and $deployToSettings.PSObject.Properties.name -eq "EnvironmentName") {
-            $environmentName = $deployToSettings.environmentName
+            $environmentName = $deployToSettings.EnvironmentName
           }
           else {
             $environmentName = $null
@@ -730,6 +730,7 @@ jobs:
             $deployToSettings | Add-Member -MemberType NoteProperty -name 'environmentName' -value $environmentName
           }
           $environmentName = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(($environmentName + '${{ matrix.environment }}'.SubString($envName.Length)).ToUpperInvariant()))
+
           if (("$deployToSettings" -ne "") -and $deployToSettings.PSObject.Properties.name -eq "projects") {
             $projects = $deployToSettings.projects
           }
@@ -774,7 +775,6 @@ jobs:
 
       - name: Deploy AL
         uses: BusinessCentralDemos/AL-Go-Actions/Deploy@PowerPlatform
-        if: ${{ steps.authContext.outputs.projects }}
         env:
           AuthContext: ${{ steps.authContext.outputs.authContext }}
         with:
@@ -793,8 +793,7 @@ jobs:
           artifactPath: '.artifacts'
           deploySettings: ${{ steps.authContext.outputs.deployTo }} 
           authSettings: ${{ steps.authContext.outputs.authContext }}
-            
-        
+
   Deliver:
     needs: [ Initialization, Build ]
     if: always() && needs.Build.result == 'Success' && github.event_name != 'workflow_run' && needs.Initialization.outputs.deliveryTargetCount > 0
