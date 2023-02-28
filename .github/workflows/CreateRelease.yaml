@@ -123,7 +123,7 @@ jobs:
             }
             $refname = "$ENV:GITHUB_REF_NAME".Replace('/','_')
             Write-Host "Analyzing artifacts for project $project"
-            $appVersion = '${{ env._appVersion }}'            
+            $appVersion = "$ENV:appVersion"
             if ($appVersion -eq "latest") {
               Write-Host "Grab latest"
               $artifact = $allArtifacts | Where-Object { $_.name -like "$project-$refname-Apps-*" -or $_.name -like "$project-$refname-PowerPlatformSolution-*" } | Select-Object -First 1
@@ -157,7 +157,6 @@ jobs:
               $atype = $atype.SubString($atype.LastIndexOf('-')+1)
               $include += $( [ordered]@{ "name" = $_.name; "url" = $_.archive_download_url; "atype" = $atype; "project" = $thisproject } )
             }
-
             if ($include.Count -eq 0) {
               Write-Host "::Error::No artifacts found for version $artifactsVersion"
               exit 1
