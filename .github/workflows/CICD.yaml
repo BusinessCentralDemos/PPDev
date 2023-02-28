@@ -793,8 +793,8 @@ jobs:
           artifactPath: '.artifacts'
           deploySettings: ${{ steps.authContext.outputs.deployTo }} 
           authSettings: ${{ steps.authContext.outputs.authContext }}
-            
-        
+
+
   Deliver:
     needs: [ Initialization, Build ]
     if: always() && needs.Build.result == 'Success' && github.event_name != 'workflow_run' && needs.Initialization.outputs.deliveryTargetCount > 0
