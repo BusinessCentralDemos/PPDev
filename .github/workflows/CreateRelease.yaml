@@ -123,7 +123,7 @@ jobs:
             }
             $refname = "$ENV:GITHUB_REF_NAME".Replace('/','_')
             Write-Host "Analyzing artifacts for project $project"
-            $appVersion = '${{ env._appVersion }}'            
+            $appVersion = "$ENV:_appVersion"
             if ($appVersion -eq "latest") {
               Write-Host "Grab latest"
               $artifact = $allArtifacts | Where-Object { $_.name -like "$project-$refname-Apps-*" -or $_.name -like "$project-$refname-PowerPlatformSolution-*" } | Select-Object -First 1
